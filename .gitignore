@@ -1,0 +1,4 @@
+*.db
+*.DB
+.vscode
+.idea
