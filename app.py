@@ -82,7 +82,7 @@ def insert(arg):
         return
     month = arg[0]
     day = arg[1]
-    
+
     try:
         title = input("title: ")
         content = input("content: ")
@@ -109,13 +109,11 @@ def show(id):
     else:
         for i in li:
             t = textwrap.fill(i[4], width=20)
-            print("""id={} ({:0>2d}/{:0>2d}, "{}")
-                  
-{}
-
-{}"""
-                  .format(i[0], i[1], i[2], SEEK, i[3], t))
-    cur.close()
+            print(
+                "id={} ({:0>2d}/{:0>2d}, \"{}\")\n"
+                .format(i[0], i[1], i[2], SEEK)
+            )
+            print("{}\n\n{}".format(i[3], t))
 
 def delete(id):
     if inspect():
