@@ -5,7 +5,7 @@ import sys
 import readline
 import textwrap
 
-VERSION = "09/05, 2023"
+VERSION = "09/07, 2023"
 conn, dbpath = None, None
 
 SEEK = None
@@ -62,10 +62,7 @@ def select(args) -> str:
         else:
             for i in li:
                 print("id={:>3} {:>4} \"{}\"".format(i[0], i[1], i[2]))
-    else:
-        print("usage: .select Y,M")
-        return
-    cur.close()
+        cur.close()
 
 def inspect() -> bool:
     if SEEK == None:
@@ -77,23 +74,29 @@ INSERT INTO `2023`(
     month, day, title, content) VALUES(
         9, 5, 'this is title', 'qwer');
 """
-def insert():
+def insert(arg):
     if inspect():
         return
-    md = input("month and day: ")
-    p = md.split()
-    month, day = int(p[0]), int(p[1])
+    if len(arg) != 2:
+        print("need month and day to set")
+        return
+    month = arg[0]
+    day = arg[1]
+    
+    try:
+        title = input("title: ")
+        content = input("content: ")
 
-    title = input("title: ")
-    content = input("content: ")
-
-    d = (month, day, title, content)
-    cur = conn.execute(
-        "INSERT INTO `{}`(month, day, title, content) VALUES(?, ?, ?, ?)"
-        .format(SEEK), d
-    )
-    print("OK, id=%d" % cur.lastrowid)
-    cur.close()
+        d = (month, day, title, content)
+        cur = conn.execute(
+            "INSERT INTO `{}`(month, day, title, content) VALUES(?, ?, ?, ?)"
+            .format(SEEK), d
+        )
+        print("OK, id=%d" % cur.lastrowid)
+        cur.close()
+    except KeyboardInterrupt:
+        print("\nbreak")
+        return
 
 def show(id):
     if inspect():
@@ -173,9 +176,9 @@ def clear():
     print("OK %dkb" % (os.path.getsize(dbpath) / 1000))
     cur.close()
 
-ENTRY = {".select": select, ".show": show,
-         ".delete": delete, ".new": new,
-         ".drop": drop}
+ENTRY = {".select": select, ".show"  : show,
+         ".delete": delete, ".new"   : new,
+         ".drop"  : drop,   ".insert": insert}
 
 def eval(com):
     match com:
@@ -186,13 +189,11 @@ def eval(com):
 .select NAME,M  simply select table and month
 .show ID        print entry
 .delete ID      delete entry
-.insert         go to innsert command prompt
+.insert M,D     go to innsert command prompt
 .clear          execute the sqlite3 vacuum command
 .quit           just exit""")
         case ".info":
             info()
-        case ".insert":
-            insert()
         case ".clear":
             clear()
         case _:
