@@ -56,13 +56,13 @@ def select(args) -> str:
             .format(args[0], args[1])
         )
         li = cur.fetchall()
+        cur.close()
 
         if len(li) == 0:
             print("empty")
-        else:
-            for i in li:
-                print("id={:>3} {:>4} \"{}\"".format(i[0], i[1], i[2]))
-        cur.close()
+            return
+        for i in li:
+            print("id={:>3} {:>4} \"{}\"".format(i[0], i[1], i[2]))
 
 def inspect() -> bool:
     if SEEK == None:
@@ -103,17 +103,18 @@ def show(id):
         return
     cur = conn.execute("SELECT * FROM `{}` WHERE id={}".format(SEEK, id[0]))
     li = cur.fetchall()
+    cur.close()
 
     if len(li) == 0:
         print("empty")
-    else:
-        for i in li:
-            t = textwrap.fill(i[4], width=20)
-            print(
-                "id={} ({:0>2d}/{:0>2d}, \"{}\")\n"
-                .format(i[0], i[1], i[2], SEEK)
-            )
-            print("{}\n\n{}".format(i[3], t))
+        return
+    for i in li:
+        t = textwrap.fill(i[4], width=20)
+        print(
+            "id={} ({:0>2d}/{:0>2d}, \"{}\")\n"
+            .format(i[0], i[1], i[2], SEEK)
+        )
+        print("{}\n\n{}".format(i[3], t))
 
 def delete(id):
     if inspect():
