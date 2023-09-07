@@ -86,11 +86,11 @@ def insert(arg):
     try:
         title = input("title: ")
         content = input("content: ")
-
-        d = (month, day, title, content)
+        
         cur = conn.execute(
             "INSERT INTO `{}`(month, day, title, content) VALUES(?, ?, ?, ?)"
-            .format(SEEK), d
+            .format(SEEK),
+            (month, day, title, content)
         )
         print("OK, id=%d" % cur.lastrowid)
         cur.close()
