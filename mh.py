@@ -1,4 +1,5 @@
-from sys import argv as v   # github.com/bingxio
+#!/bin/python3
+from sys import argv as v
 D = [[1,1,1],[1,1,0],[1,0,1],[1,0,0],[0,1,1],[0,1,0],[0,0,1],[0,0,0]]
 x, y, m = int(v[1][0]), int(v[1][1]), int(v[1][2])
 l, r = [*D[y - 1], *D[x - 1]], [*D[y - 1], *D[x - 1]]
